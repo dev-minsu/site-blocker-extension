@@ -24,15 +24,36 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
+      padding: 14px 20px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
 
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .header h1 {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       letter-spacing: -0.3px;
+    }
+
+    .btn-lang {
+      background: rgba(255,255,255,0.18);
+      border: none;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1.4;
+      transition: background 0.2s;
+    }
+
+    .btn-lang:hover {
+      background: rgba(255,255,255,0.3);
     }
 
     /* Toggle Switch */
@@ -96,11 +117,11 @@
 
     /* Rules List */
     .section-title {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       color: #6b7280;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
       margin-bottom: 10px;
     }
 
@@ -109,7 +130,7 @@
       flex-direction: column;
       gap: 8px;
       margin-bottom: 20px;
-      max-height: 280px;
+      max-height: 260px;
       overflow-y: auto;
     }
 
@@ -117,7 +138,7 @@
       background: white;
       border: 1px solid #e5e7eb;
       border-radius: 10px;
-      padding: 12px 14px;
+      padding: 11px 13px;
       display: flex;
       align-items: flex-start;
       gap: 10px;
@@ -129,7 +150,7 @@
     }
 
     .rule-item.disabled {
-      opacity: 0.5;
+      opacity: 0.45;
     }
 
     .rule-info {
@@ -139,7 +160,7 @@
 
     .rule-site {
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       color: #1a1a2e;
       white-space: nowrap;
       overflow: hidden;
@@ -150,7 +171,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
-      margin-top: 6px;
+      margin-top: 5px;
     }
 
     .badge {
@@ -171,7 +192,7 @@
     .rule-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
@@ -217,13 +238,30 @@
       transform: translateX(16px);
     }
 
+    .btn-edit {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 3px;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 4px;
+      transition: background 0.2s;
+      opacity: 0.6;
+    }
+
+    .btn-edit:hover {
+      background: #e0e7ff;
+      opacity: 1;
+    }
+
     .btn-delete {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 3px 5px;
       color: #9ca3af;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 1;
       border-radius: 4px;
       transition: color 0.2s, background 0.2s;
@@ -246,19 +284,21 @@
       background: white;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
     }
 
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 11px;
     }
 
     .form-label {
       display: block;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       color: #6b7280;
       margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
     .form-input {
@@ -266,7 +306,7 @@
       padding: 8px 12px;
       border: 1px solid #e5e7eb;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       color: #1a1a2e;
       outline: none;
       transition: border-color 0.2s;
@@ -280,7 +320,7 @@
     .days-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      gap: 3px;
     }
 
     .day-check {
@@ -291,7 +331,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 32px;
+      height: 30px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
@@ -310,7 +350,7 @@
     .time-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
 
     .btn-add {
@@ -320,26 +360,95 @@
       color: white;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.2s;
     }
 
-    .btn-add:hover {
-      opacity: 0.9;
+    .btn-add:hover { opacity: 0.9; }
+    .btn-add:active { opacity: 0.8; }
+
+    /* Edit Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
     }
 
-    .btn-add:active {
-      opacity: 0.8;
+    .modal-box {
+      background: white;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
     }
+
+    .modal-header {
+      padding: 14px 18px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .modal-body {
+      padding: 16px 18px;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-cancel {
+      padding: 10px;
+      background: #f3f4f6;
+      color: #374151;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-cancel:hover { background: #e5e7eb; }
+
+    .btn-save {
+      padding: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-save:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>🚫 Site Blocker</h1>
+    <div class="header-left">
+      <h1 id="app-title">🚫 Site Blocker</h1>
+      <button class="btn-lang" id="lang-btn" aria-label="언어 전환">🇺🇸</button>
+    </div>
     <div class="toggle-wrap">
-      <span class="toggle-label">전체</span>
+      <span class="toggle-label" id="global-label">전체</span>
       <label class="toggle">
         <input type="checkbox" id="global-toggle" checked />
         <span class="slider"></span>
@@ -348,45 +457,40 @@
   </div>
 
   <div class="content">
-    <div class="section-title">차단 규칙</div>
+    <div class="section-title" id="rules-section-title">차단 규칙</div>
     <div id="rules-list">
       <div class="empty-state">아직 차단 규칙이 없습니다</div>
     </div>
 
-    <div class="section-title">규칙 추가</div>
+    <div class="section-title" id="add-section-title">규칙 추가</div>
     <div class="add-form">
       <div class="form-group">
-        <label class="form-label" for="url-input">사이트 URL</label>
-        <input
-          type="text"
-          id="url-input"
-          class="form-input"
-          placeholder="예: youtube.com"
-        />
+        <label class="form-label" id="url-label" for="url-input">사이트 URL</label>
+        <input type="text" id="url-input" class="form-input" placeholder="예: youtube.com" />
       </div>
 
       <div class="form-group">
-        <label class="form-label">차단 요일</label>
+        <label class="form-label" id="days-label">차단 요일</label>
         <div class="days-grid">
           <input type="checkbox" class="day-check" id="d0" value="0" />
-          <label class="day-label" for="d0">일</label>
+          <label class="day-label" for="d0" id="dl0">일</label>
           <input type="checkbox" class="day-check" id="d1" value="1" checked />
-          <label class="day-label" for="d1">월</label>
+          <label class="day-label" for="d1" id="dl1">월</label>
           <input type="checkbox" class="day-check" id="d2" value="2" checked />
-          <label class="day-label" for="d2">화</label>
+          <label class="day-label" for="d2" id="dl2">화</label>
           <input type="checkbox" class="day-check" id="d3" value="3" checked />
-          <label class="day-label" for="d3">수</label>
+          <label class="day-label" for="d3" id="dl3">수</label>
           <input type="checkbox" class="day-check" id="d4" value="4" checked />
-          <label class="day-label" for="d4">목</label>
+          <label class="day-label" for="d4" id="dl4">목</label>
           <input type="checkbox" class="day-check" id="d5" value="5" checked />
-          <label class="day-label" for="d5">금</label>
+          <label class="day-label" for="d5" id="dl5">금</label>
           <input type="checkbox" class="day-check" id="d6" value="6" />
-          <label class="day-label" for="d6">토</label>
+          <label class="day-label" for="d6" id="dl6">토</label>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">차단 시간</label>
+        <label class="form-label" id="time-label">차단 시간</label>
         <div class="time-row">
           <input type="time" id="start-time" class="form-input" value="09:00" />
           <input type="time" id="end-time" class="form-input" value="18:00" />

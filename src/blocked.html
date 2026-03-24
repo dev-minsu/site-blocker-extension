@@ -22,177 +22,193 @@
       overflow: hidden;
     }
 
-    /* Background glow effect */
+    /* Ambient glow */
     body::before {
       content: '';
       position: fixed;
-      top: -200px;
+      top: -250px;
       left: 50%;
       transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 70%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(239,68,68,0.1) 0%, transparent 65%);
       pointer-events: none;
+      z-index: 0;
     }
 
     .container {
+      position: relative;
+      z-index: 1;
       text-align: center;
-      padding: 40px 32px;
-      max-width: 520px;
+      padding: 48px 32px;
+      max-width: 560px;
       width: 100%;
     }
 
+    /* Icon */
     .icon {
-      font-size: 72px;
-      margin-bottom: 24px;
-      animation: pulse 2s ease-in-out infinite;
+      font-size: 80px;
+      margin-bottom: 28px;
+      animation: float 3s ease-in-out infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
-    .title {
-      font-size: 28px;
+    /* Titles */
+    .blocked-title {
+      font-size: 26px;
       font-weight: 800;
       color: #f87171;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       letter-spacing: -0.5px;
+      line-height: 1.3;
     }
 
-    .site-name {
-      font-size: 20px;
-      font-weight: 600;
-      color: #94a3b8;
-      margin-bottom: 32px;
-    }
-
-    /* Schedule card */
-    .schedule-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 20px 24px;
-      margin-bottom: 24px;
-    }
-
-    .schedule-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #64748b;
-      margin-bottom: 8px;
-    }
-
-    .schedule-value {
-      font-size: 18px;
-      font-weight: 700;
-      color: #fb923c;
-    }
-
-    /* Countdown */
-    .countdown-wrap {
-      background: rgba(239,68,68,0.08);
-      border: 1px solid rgba(239,68,68,0.2);
-      border-radius: 16px;
-      padding: 20px 24px;
-      margin-bottom: 32px;
-    }
-
-    .countdown-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .blocked-subtitle {
+      font-size: 15px;
       color: #64748b;
       margin-bottom: 10px;
     }
 
+    .site-name {
+      display: inline-block;
+      font-size: 22px;
+      font-weight: 700;
+      color: #e2e8f0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 4px 16px;
+      margin-bottom: 32px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .schedule-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fb923c;
+      letter-spacing: -0.3px;
+    }
+
+    /* Countdown */
+    .countdown-card {
+      background: rgba(239,68,68,0.07);
+      border: 1px solid rgba(239,68,68,0.18);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+
     .countdown {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
-      gap: 4px;
+      gap: 2px;
     }
 
     .time-block {
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-width: 72px;
     }
 
     .time-number {
-      font-size: 40px;
+      font-size: 48px;
       font-weight: 800;
       color: #f87171;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      min-width: 60px;
-      text-align: center;
+      letter-spacing: -2px;
     }
 
     .time-unit {
       font-size: 11px;
-      color: #64748b;
-      margin-top: 4px;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .time-sep {
-      font-size: 36px;
+      font-size: 40px;
       font-weight: 800;
       color: #f87171;
       line-height: 1;
-      margin-bottom: 18px;
+      padding-bottom: 18px;
+      opacity: 0.6;
       animation: blink 1s step-end infinite;
     }
 
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.1; }
     }
 
     /* Motivation */
     .motivation {
       font-size: 15px;
-      line-height: 1.7;
-      color: #94a3b8;
+      line-height: 1.75;
+      color: #64748b;
       font-style: italic;
-      padding: 0 8px;
+      padding: 0 12px;
     }
 
-    .motivation::before { content: '"'; }
-    .motivation::after { content: '"'; }
+    .motivation::before { content: '"'; color: #334155; }
+    .motivation::after  { content: '"'; color: #334155; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="icon">🚫</div>
-    <div class="title">접근이 차단되었습니다</div>
+
+    <div class="blocked-title" id="blocked-title">현재 이 사이트는 차단되어 있습니다</div>
+    <div class="blocked-subtitle" id="blocked-subtitle">지금은 이 사이트에 접근할 수 없습니다.</div>
     <div class="site-name" id="site-name">사이트 로딩 중...</div>
 
-    <div class="schedule-card">
-      <div class="schedule-label">차단 스케줄</div>
+    <div class="card">
+      <div class="card-label" id="schedule-label">차단 스케줄</div>
       <div class="schedule-value" id="schedule-value">로딩 중...</div>
     </div>
 
-    <div class="countdown-wrap">
-      <div class="countdown-label">해제까지 남은 시간</div>
+    <div class="countdown-card">
+      <div class="card-label" id="countdown-label">해제까지 남은 시간</div>
       <div class="countdown">
         <div class="time-block">
           <div class="time-number" id="hours">00</div>
-          <div class="time-unit">시간</div>
+          <div class="time-unit" id="hours-unit">시간</div>
         </div>
         <div class="time-sep">:</div>
         <div class="time-block">
           <div class="time-number" id="minutes">00</div>
-          <div class="time-unit">분</div>
+          <div class="time-unit" id="minutes-unit">분</div>
         </div>
         <div class="time-sep">:</div>
         <div class="time-block">
           <div class="time-number" id="seconds">00</div>
-          <div class="time-unit">초</div>
+          <div class="time-unit" id="seconds-unit">초</div>
         </div>
       </div>
     </div>
