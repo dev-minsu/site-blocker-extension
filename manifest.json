@@ -21,8 +21,12 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["dist/blocked.html"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "dist/blocked.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "icons": {

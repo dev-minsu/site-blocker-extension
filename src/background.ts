@@ -69,7 +69,7 @@ function findBlockingRule(url: string): BlockRule | null {
 }
 
 function buildBlockedUrl(tabId: number, rule: BlockRule, originalUrl: string): string {
-  const extensionUrl = chrome.runtime.getURL('blocked.html');
+  const extensionUrl = chrome.runtime.getURL('dist/blocked.html'); // Chrome ext root = project root, dist/ prefix needed
   let site = '';
   try {
     site = new URL(originalUrl).hostname.replace(/^www\./, '');
