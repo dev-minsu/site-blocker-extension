@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,48 +13,29 @@
 
     body {
       width: 380px;
-      min-height: 200px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 14px;
-      color: #1a1a1a;
-      background: #f5f5f7;
+      color: #1a1a2e;
+      background: #f8f9ff;
     }
 
-    /* ── Header ── */
+    /* Header */
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 18px;
-      background: #fff;
-      border-bottom: 1px solid #e5e5e5;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, #ff4d4d, #ff7043);
-      border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-
-    .title {
-      font-size: 16px;
+    .header h1 {
+      font-size: 18px;
       font-weight: 700;
-      color: #1a1a1a;
       letter-spacing: -0.3px;
     }
 
-    /* Toggle switch */
+    /* Toggle Switch */
     .toggle-wrap {
       display: flex;
       align-items: center;
@@ -63,13 +44,13 @@
 
     .toggle-label {
       font-size: 12px;
-      color: #888;
       font-weight: 500;
+      opacity: 0.9;
     }
 
     .toggle {
       position: relative;
-      width: 42px;
+      width: 44px;
       height: 24px;
     }
 
@@ -79,91 +60,72 @@
       height: 0;
     }
 
-    .toggle-slider {
+    .slider {
       position: absolute;
-      inset: 0;
-      background: #d1d1d6;
-      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.2s;
+      inset: 0;
+      background: rgba(255,255,255,0.3);
+      border-radius: 24px;
+      transition: 0.3s;
     }
 
-    .toggle-slider::before {
+    .slider::before {
       content: '';
       position: absolute;
-      width: 18px;
       height: 18px;
+      width: 18px;
       left: 3px;
-      top: 3px;
-      background: #fff;
+      bottom: 3px;
+      background: white;
       border-radius: 50%;
-      transition: transform 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: 0.3s;
     }
 
-    .toggle input:checked + .toggle-slider {
-      background: #34c759;
+    input:checked + .slider {
+      background: rgba(255,255,255,0.6);
     }
 
-    .toggle input:checked + .toggle-slider::before {
-      transform: translateX(18px);
+    input:checked + .slider::before {
+      transform: translateX(20px);
     }
 
-    /* ── Rules list ── */
-    .rules-section {
-      padding: 12px 12px 8px;
+    /* Content */
+    .content {
+      padding: 16px 20px;
     }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 6px 8px;
-    }
-
+    /* Rules List */
     .section-title {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      color: #888;
+      color: #6b7280;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      margin-bottom: 10px;
     }
 
-    .rules-count {
-      font-size: 11px;
-      color: #bbb;
-    }
-
-    .rules-list {
+    #rules-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
+      margin-bottom: 20px;
       max-height: 280px;
       overflow-y: auto;
     }
 
-    .rules-list::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .rules-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .rules-list::-webkit-scrollbar-thumb {
-      background: #ddd;
-      border-radius: 2px;
-    }
-
     .rule-item {
-      background: #fff;
+      background: white;
+      border: 1px solid #e5e7eb;
       border-radius: 10px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 10px;
-      border: 1px solid #eee;
-      transition: opacity 0.2s;
+      transition: box-shadow 0.2s;
+    }
+
+    .rule-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .rule-item.disabled {
@@ -175,181 +137,150 @@
       min-width: 0;
     }
 
-    .rule-url {
-      font-size: 13px;
+    .rule-site {
       font-weight: 600;
-      color: #1a1a1a;
+      font-size: 14px;
+      color: #1a1a2e;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .rule-meta {
+    .rule-badges {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 3px;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
     }
 
-    .rule-days {
+    .badge {
+      display: inline-block;
       font-size: 11px;
-      color: #888;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: #ede9fe;
+      color: #6d28d9;
     }
 
-    .rule-time {
-      font-size: 11px;
-      color: #888;
-      background: #f5f5f7;
-      border-radius: 4px;
-      padding: 1px 5px;
+    .badge.time {
+      background: #dbeafe;
+      color: #1d4ed8;
     }
 
     .rule-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
-    .rule-toggle {
+    /* Small toggle */
+    .toggle-sm {
       position: relative;
-      width: 34px;
+      width: 36px;
       height: 20px;
     }
 
-    .rule-toggle input {
+    .toggle-sm input {
       opacity: 0;
       width: 0;
       height: 0;
     }
 
-    .rule-toggle-slider {
+    .slider-sm {
       position: absolute;
-      inset: 0;
-      background: #d1d1d6;
-      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.2s;
+      inset: 0;
+      background: #d1d5db;
+      border-radius: 20px;
+      transition: 0.3s;
     }
 
-    .rule-toggle-slider::before {
+    .slider-sm::before {
       content: '';
       position: absolute;
-      width: 14px;
       height: 14px;
+      width: 14px;
       left: 3px;
-      top: 3px;
-      background: #fff;
+      bottom: 3px;
+      background: white;
       border-radius: 50%;
-      transition: transform 0.2s;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      transition: 0.3s;
     }
 
-    .rule-toggle input:checked + .rule-toggle-slider {
-      background: #34c759;
+    input:checked + .slider-sm {
+      background: #667eea;
     }
 
-    .rule-toggle input:checked + .rule-toggle-slider::before {
-      transform: translateX(14px);
+    input:checked + .slider-sm::before {
+      transform: translateX(16px);
     }
 
     .btn-delete {
-      width: 26px;
-      height: 26px;
+      background: none;
       border: none;
-      background: #fff0f0;
-      color: #ff4d4d;
-      border-radius: 6px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
+      padding: 4px;
+      color: #9ca3af;
+      font-size: 16px;
       line-height: 1;
-      transition: background 0.15s;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
     }
 
     .btn-delete:hover {
-      background: #ffd6d6;
+      color: #ef4444;
+      background: #fee2e2;
     }
 
     .empty-state {
       text-align: center;
-      padding: 24px 0 16px;
-      color: #bbb;
-    }
-
-    .empty-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-
-    .empty-text {
+      padding: 24px 16px;
+      color: #9ca3af;
       font-size: 13px;
     }
 
-    /* ── Add form ── */
-    .add-section {
-      background: #fff;
-      border-top: 1px solid #e5e5e5;
-      padding: 14px 16px 16px;
-    }
-
-    .add-section-title {
-      font-size: 11px;
-      font-weight: 600;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
+    /* Add Form */
+    .add-form {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
     }
 
     .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
+      margin-bottom: 12px;
     }
 
     .form-label {
-      font-size: 11px;
+      display: block;
+      font-size: 12px;
       font-weight: 600;
-      color: #555;
+      color: #6b7280;
+      margin-bottom: 6px;
     }
 
     .form-input {
-      height: 34px;
-      border: 1.5px solid #e5e5e5;
-      border-radius: 8px;
-      padding: 0 10px;
-      font-size: 13px;
-      color: #1a1a1a;
-      background: #fafafa;
-      outline: none;
-      transition: border-color 0.15s;
       width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.2s;
     }
 
     .form-input:focus {
-      border-color: #007aff;
-      background: #fff;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
     }
 
-    .form-input::placeholder {
-      color: #bbb;
-    }
-
-    /* Days checkboxes */
-    .days-row {
-      display: flex;
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
       gap: 4px;
-      margin-bottom: 10px;
     }
 
     .day-check {
@@ -357,57 +288,42 @@
     }
 
     .day-label {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      border: 1.5px solid #e5e5e5;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      height: 32px;
+      border-radius: 6px;
+      font-size: 12px;
       font-weight: 600;
-      color: #888;
       cursor: pointer;
-      background: #fafafa;
-      transition: all 0.15s;
+      background: #f3f4f6;
+      color: #6b7280;
+      transition: background 0.2s, color 0.2s;
       user-select: none;
     }
 
     .day-check:checked + .day-label {
-      background: #007aff;
-      border-color: #007aff;
-      color: #fff;
+      background: #667eea;
+      color: white;
     }
 
     .time-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .time-row .form-group {
-      flex: 1;
-    }
-
-    .time-separator {
-      color: #bbb;
-      font-size: 13px;
-      padding-top: 16px;
-      flex-shrink: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     .btn-add {
       width: 100%;
-      height: 38px;
-      background: linear-gradient(135deg, #007aff, #0055d4);
-      color: #fff;
+      padding: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
+      transition: opacity 0.2s;
     }
 
     .btn-add:hover {
@@ -415,117 +331,70 @@
     }
 
     .btn-add:active {
-      transform: scale(0.98);
-    }
-
-    .btn-add:disabled {
-      background: #d1d1d6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* Error message */
-    .error-msg {
-      font-size: 11px;
-      color: #ff4d4d;
-      margin-top: -6px;
-      margin-bottom: 6px;
-      padding-left: 2px;
-      display: none;
-    }
-
-    .error-msg.visible {
-      display: block;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
-
-  <!-- Header -->
   <div class="header">
-    <div class="header-left">
-      <div class="logo">🚫</div>
-      <span class="title">Site Blocker</span>
-    </div>
+    <h1>🚫 Site Blocker</h1>
     <div class="toggle-wrap">
-      <span class="toggle-label" id="global-status-label">ON</span>
+      <span class="toggle-label">전체</span>
       <label class="toggle">
         <input type="checkbox" id="global-toggle" checked />
-        <span class="toggle-slider"></span>
+        <span class="slider"></span>
       </label>
     </div>
   </div>
 
-  <!-- Rules list -->
-  <div class="rules-section">
-    <div class="section-header">
-      <span class="section-title">Blocked Sites</span>
-      <span class="rules-count" id="rules-count">0 rules</span>
+  <div class="content">
+    <div class="section-title">차단 규칙</div>
+    <div id="rules-list">
+      <div class="empty-state">아직 차단 규칙이 없습니다</div>
     </div>
-    <div class="rules-list" id="rules-list">
-      <div class="empty-state" id="empty-state">
-        <div class="empty-icon">🎉</div>
-        <div class="empty-text">No sites blocked yet</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Add form -->
-  <div class="add-section">
-    <div class="add-section-title">Add Rule</div>
-
-    <div class="form-row">
+    <div class="section-title">규칙 추가</div>
+    <div class="add-form">
       <div class="form-group">
-        <label class="form-label" for="url-input">URL Pattern</label>
+        <label class="form-label" for="url-input">사이트 URL</label>
         <input
           type="text"
           id="url-input"
           class="form-input"
-          placeholder="e.g. youtube.com"
+          placeholder="예: youtube.com"
         />
       </div>
-    </div>
-    <div class="error-msg" id="url-error">Please enter a valid URL pattern.</div>
 
-    <div style="margin-bottom:6px;">
-      <div class="form-label" style="margin-bottom:6px;">Days</div>
-      <div class="days-row">
-        <input type="checkbox" class="day-check" id="d0" value="0" />
-        <label class="day-label" for="d0">Su</label>
-
-        <input type="checkbox" class="day-check" id="d1" value="1" checked />
-        <label class="day-label" for="d1">Mo</label>
-
-        <input type="checkbox" class="day-check" id="d2" value="2" checked />
-        <label class="day-label" for="d2">Tu</label>
-
-        <input type="checkbox" class="day-check" id="d3" value="3" checked />
-        <label class="day-label" for="d3">We</label>
-
-        <input type="checkbox" class="day-check" id="d4" value="4" checked />
-        <label class="day-label" for="d4">Th</label>
-
-        <input type="checkbox" class="day-check" id="d5" value="5" checked />
-        <label class="day-label" for="d5">Fr</label>
-
-        <input type="checkbox" class="day-check" id="d6" value="6" />
-        <label class="day-label" for="d6">Sa</label>
-      </div>
-    </div>
-
-    <div class="time-row">
       <div class="form-group">
-        <label class="form-label" for="start-time">Start</label>
-        <input type="time" id="start-time" class="form-input" value="09:00" />
+        <label class="form-label">차단 요일</label>
+        <div class="days-grid">
+          <input type="checkbox" class="day-check" id="d0" value="0" />
+          <label class="day-label" for="d0">일</label>
+          <input type="checkbox" class="day-check" id="d1" value="1" checked />
+          <label class="day-label" for="d1">월</label>
+          <input type="checkbox" class="day-check" id="d2" value="2" checked />
+          <label class="day-label" for="d2">화</label>
+          <input type="checkbox" class="day-check" id="d3" value="3" checked />
+          <label class="day-label" for="d3">수</label>
+          <input type="checkbox" class="day-check" id="d4" value="4" checked />
+          <label class="day-label" for="d4">목</label>
+          <input type="checkbox" class="day-check" id="d5" value="5" checked />
+          <label class="day-label" for="d5">금</label>
+          <input type="checkbox" class="day-check" id="d6" value="6" />
+          <label class="day-label" for="d6">토</label>
+        </div>
       </div>
-      <span class="time-separator">–</span>
-      <div class="form-group">
-        <label class="form-label" for="end-time">End</label>
-        <input type="time" id="end-time" class="form-input" value="18:00" />
-      </div>
-    </div>
 
-    <button class="btn-add" id="btn-add">+ Add Rule</button>
+      <div class="form-group">
+        <label class="form-label">차단 시간</label>
+        <div class="time-row">
+          <input type="time" id="start-time" class="form-input" value="09:00" />
+          <input type="time" id="end-time" class="form-input" value="18:00" />
+        </div>
+      </div>
+
+      <button id="add-btn" class="btn-add">+ 규칙 추가</button>
+    </div>
   </div>
 
   <script src="popup.js"></script>

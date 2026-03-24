@@ -3,229 +3,201 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>사이트 차단됨</title>
+  <title>접근 차단됨</title>
   <style>
-    *, *::before, *::after {
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --border: #2a2d3e;
-      --accent: #6c63ff;
-      --accent-dim: rgba(108, 99, 255, 0.15);
-      --text-primary: #e8eaf0;
-      --text-secondary: #8b8fa8;
-      --text-muted: #555870;
-      --danger: #ff6b6b;
-      --success: #51cf66;
-    }
-
-    html, body {
-      height: 100%;
-    }
-
     body {
-      background: var(--bg);
-      color: var(--text-primary);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      background: #0d0d1a;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       overflow: hidden;
     }
 
-    /* Ambient background glow */
+    /* Background glow effect */
     body::before {
       content: '';
       position: fixed;
-      top: -30%;
+      top: -200px;
       left: 50%;
       transform: translateX(-50%);
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(108, 99, 255, 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 70%);
       pointer-events: none;
     }
 
     .container {
       text-align: center;
-      padding: 2rem;
-      max-width: 480px;
+      padding: 40px 32px;
+      max-width: 520px;
       width: 100%;
-      animation: fadeIn 0.5s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Icon */
     .icon {
-      width: 72px;
-      height: 72px;
-      margin: 0 auto 1.5rem;
-      background: var(--accent-dim);
-      border: 1px solid rgba(108, 99, 255, 0.3);
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
+      font-size: 72px;
+      margin-bottom: 24px;
+      animation: pulse 2s ease-in-out infinite;
     }
 
-    /* Site name */
-    .site-name {
-      font-size: 2rem;
-      font-weight: 700;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #f87171;
+      margin-bottom: 8px;
       letter-spacing: -0.5px;
-      color: var(--text-primary);
-      margin-bottom: 0.4rem;
     }
 
-    .blocked-label {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--danger);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 2rem;
+    .site-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 32px;
     }
 
     /* Schedule card */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    .schedule-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
+      padding: 20px 24px;
+      margin-bottom: 24px;
     }
 
-    .card-label {
-      font-size: 0.75rem;
+    .schedule-label {
+      font-size: 12px;
       font-weight: 600;
-      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 0.5rem;
+      color: #64748b;
+      margin-bottom: 8px;
     }
 
-    .schedule-text {
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text-secondary);
+    .schedule-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fb923c;
     }
 
     /* Countdown */
-    .countdown-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    .countdown-wrap {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
       border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
+      padding: 20px 24px;
+      margin-bottom: 32px;
     }
 
     .countdown-label {
-      font-size: 0.75rem;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 1rem;
+      color: #64748b;
+      margin-bottom: 10px;
     }
 
-    .countdown-digits {
+    .countdown {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 4px;
     }
 
-    .digit-group {
+    .time-block {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.25rem;
     }
 
-    .digit-value {
-      font-size: 2.5rem;
+    .time-number {
+      font-size: 40px;
       font-weight: 800;
+      color: #f87171;
+      line-height: 1;
       font-variant-numeric: tabular-nums;
-      color: var(--accent);
-      line-height: 1;
-      min-width: 3rem;
+      min-width: 60px;
+      text-align: center;
     }
 
-    .digit-unit {
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .time-unit {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
     }
 
-    .digit-sep {
-      font-size: 2rem;
+    .time-sep {
+      font-size: 36px;
       font-weight: 800;
-      color: var(--text-muted);
+      color: #f87171;
       line-height: 1;
-      margin-bottom: 1.2rem;
+      margin-bottom: 18px;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
     }
 
     /* Motivation */
     .motivation {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #94a3b8;
       font-style: italic;
+      padding: 0 8px;
     }
 
-    .motivation::before,
-    .motivation::after {
-      content: '"';
-      color: var(--accent);
-      font-style: normal;
-    }
+    .motivation::before { content: '"'; }
+    .motivation::after { content: '"'; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="icon">🚫</div>
-    <div class="site-name" id="siteName">사이트</div>
-    <div class="blocked-label">차단됨</div>
+    <div class="title">접근이 차단되었습니다</div>
+    <div class="site-name" id="site-name">사이트 로딩 중...</div>
 
-    <div class="card">
-      <div class="card-label">차단 스케줄</div>
-      <div class="schedule-text" id="scheduleText">로딩 중...</div>
+    <div class="schedule-card">
+      <div class="schedule-label">차단 스케줄</div>
+      <div class="schedule-value" id="schedule-value">로딩 중...</div>
     </div>
 
-    <div class="countdown-card">
-      <div class="countdown-label">차단 해제까지</div>
-      <div class="countdown-digits">
-        <div class="digit-group">
-          <span class="digit-value" id="cdHours">00</span>
-          <span class="digit-unit">시간</span>
+    <div class="countdown-wrap">
+      <div class="countdown-label">해제까지 남은 시간</div>
+      <div class="countdown">
+        <div class="time-block">
+          <div class="time-number" id="hours">00</div>
+          <div class="time-unit">시간</div>
         </div>
-        <span class="digit-sep">:</span>
-        <div class="digit-group">
-          <span class="digit-value" id="cdMinutes">00</span>
-          <span class="digit-unit">분</span>
+        <div class="time-sep">:</div>
+        <div class="time-block">
+          <div class="time-number" id="minutes">00</div>
+          <div class="time-unit">분</div>
         </div>
-        <span class="digit-sep">:</span>
-        <div class="digit-group">
-          <span class="digit-value" id="cdSeconds">00</span>
-          <span class="digit-unit">초</span>
+        <div class="time-sep">:</div>
+        <div class="time-block">
+          <div class="time-number" id="seconds">00</div>
+          <div class="time-unit">초</div>
         </div>
       </div>
     </div>
 
-    <div class="motivation" id="motivationText">지금 이 순간에 집중하세요. 당신은 더 중요한 일을 하고 있습니다.</div>
+    <div class="motivation" id="motivation">집중력을 유지하세요!</div>
   </div>
 
   <script src="blocked.js"></script>

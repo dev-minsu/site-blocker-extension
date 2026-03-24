@@ -1,127 +1,140 @@
 const MOTIVATIONS: string[] = [
-  '지금 이 순간에 집중하세요. 당신은 더 중요한 일을 하고 있습니다.',
-  '딥 워크는 슈퍼파워입니다. 지금 그 힘을 키우고 있어요.',
-  '작은 집중이 쌓여 큰 성과가 됩니다.',
-  '방해 없는 한 시간이 분산된 하루보다 값집니다.',
-  '미래의 나에게 감사받을 선택을 하고 있습니다.',
-  '지금 참는 것이 나중의 자유를 만듭니다.',
-  '목표에 집중하세요. 모든 것은 그 후에 있습니다.',
+  '지금 이 순간의 집중이 미래의 나를 만듭니다.',
+  '딴짓하고 싶은 마음, 그게 바로 성장의 신호입니다.',
+  '한 시간의 집중이 하루를 바꿉니다.',
+  '지금 참으면 나중에 자유롭습니다.',
+  '위대한 결과는 깊은 집중에서 태어납니다.',
+  '인터넷은 나중에도 있습니다. 지금 이 기회는 지금뿐입니다.',
+  '오늘의 나는 어제의 나보다 강합니다.',
+  '집중은 가장 강력한 생산성 도구입니다.',
+  '작은 저항을 이겨내는 것이 습관을 만듭니다.',
+  '뇌는 멀티태스킹이 불가능합니다. 하나에 집중하세요.',
 ];
 
-const DAY_NAMES: string[] = ['일', '월', '화', '수', '목', '금', '토'];
+const DAY_LABELS: Record<number, string> = {
+  0: '일',
+  1: '월',
+  2: '화',
+  3: '수',
+  4: '목',
+  5: '금',
+  6: '토',
+};
+
+function parseParams(): {
+  site: string;
+  start: string;
+  end: string;
+  days: number[];
+} {
+  const params = new URLSearchParams(window.location.search);
+  const site = params.get('site') ?? '알 수 없는 사이트';
+  const start = params.get('start') ?? '00:00';
+  const end = params.get('end') ?? '24:00';
+  const daysStr = params.get('days') ?? '';
+  const days = daysStr
+    ? daysStr
+        .split(',')
+        .map((d) => parseInt(d, 10))
+        .filter((d) => !isNaN(d))
+    : [];
+
+  return { site, start, end, days };
+}
+
+function formatSchedule(days: number[], start: string, end: string): string {
+  let dayStr: string;
+
+  if (days.length === 0) {
+    dayStr = '매일';
+  } else if (days.length === 7) {
+    dayStr = '매일';
+  } else if (
+    days.length === 5 &&
+    days.includes(1) &&
+    days.includes(2) &&
+    days.includes(3) &&
+    days.includes(4) &&
+    days.includes(5)
+  ) {
+    dayStr = '월~금';
+  } else if (days.length === 2 && days.includes(0) && days.includes(6)) {
+    dayStr = '주말';
+  } else if (days.length >= 2) {
+    const sorted = [...days].sort((a, b) => a - b);
+    // Check if consecutive
+    const isConsecutive = sorted.every(
+      (d, i) => i === 0 || d === (sorted[i - 1] as number) + 1
+    );
+    if (isConsecutive) {
+      dayStr = `${DAY_LABELS[sorted[0] as number]}~${DAY_LABELS[sorted[sorted.length - 1] as number]}`;
+    } else {
+      dayStr = sorted.map((d) => DAY_LABELS[d]).join('·');
+    }
+  } else {
+    dayStr = days.map((d) => DAY_LABELS[d]).join('·');
+  }
+
+  return `${dayStr} ${start}–${end}`;
+}
+
+function getEndDateTime(endTime: string): Date {
+  const now = new Date();
+  const [hours, minutes] = endTime.split(':').map(Number);
+  const end = new Date(now);
+  end.setHours(hours as number, minutes as number, 0, 0);
+
+  // If end time has already passed today, it ends tomorrow
+  if (end <= now) {
+    end.setDate(end.getDate() + 1);
+  }
+
+  return end;
+}
 
 function pad(n: number): string {
   return String(n).padStart(2, '0');
 }
 
-function parseDays(daysParam: string): number[] {
-  return daysParam.split(',').map((d) => parseInt(d.trim(), 10)).filter((d) => !isNaN(d));
-}
-
-function formatDays(days: number[]): string {
-  if (days.length === 0) return '';
-
-  // Common shorthand patterns
-  const sorted = [...days].sort((a, b) => a - b);
-
-  if (sorted.join(',') === '1,2,3,4,5') return '월~금';
-  if (sorted.join(',') === '0,6') return '주말';
-  if (sorted.join(',') === '0,1,2,3,4,5,6') return '매일';
-
-  // Check for consecutive range
-  let isRange = true;
-  for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i] !== sorted[i - 1] + 1) { isRange = false; break; }
-  }
-  if (isRange && sorted.length > 2) {
-    return `${DAY_NAMES[sorted[0]]}~${DAY_NAMES[sorted[sorted.length - 1]]}`;
-  }
-
-  return sorted.map((d) => DAY_NAMES[d]).join(', ');
-}
-
-/** Returns seconds until end time today, or seconds until next block starts */
-function getSecondsUntilUnblock(
-  endHour: number,
-  endMinute: number,
-  days: number[],
-): number {
+function updateCountdown(endDate: Date): void {
   const now = new Date();
-  const currentDay = now.getDay();
-  const currentSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-  const endSeconds = endHour * 3600 + endMinute * 60;
+  let diff = Math.max(0, Math.floor((endDate.getTime() - now.getTime()) / 1000));
 
-  // If today is a blocked day and we haven't passed end time yet
-  if (days.includes(currentDay) && currentSeconds < endSeconds) {
-    return endSeconds - currentSeconds;
-  }
+  const hoursEl = document.getElementById('hours') as HTMLElement;
+  const minutesEl = document.getElementById('minutes') as HTMLElement;
+  const secondsEl = document.getElementById('seconds') as HTMLElement;
 
-  // Find next blocked day
-  for (let delta = 1; delta <= 7; delta++) {
-    const nextDay = (currentDay + delta) % 7;
-    if (days.includes(nextDay)) {
-      // Seconds until end of that day's block
-      const secondsToMidnight = 86400 - currentSeconds;
-      const secondsInFutureDays = (delta - 1) * 86400;
-      return secondsToMidnight + secondsInFutureDays + endSeconds;
-    }
-  }
+  const h = Math.floor(diff / 3600);
+  diff -= h * 3600;
+  const m = Math.floor(diff / 60);
+  const s = diff - m * 60;
 
-  return 0;
-}
-
-function updateCountdown(endHour: number, endMinute: number, days: number[]): void {
-  const totalSeconds = getSecondsUntilUnblock(endHour, endMinute, days);
-
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
-
-  const hoursEl = document.getElementById('cdHours');
-  const minutesEl = document.getElementById('cdMinutes');
-  const secondsEl = document.getElementById('cdSeconds');
-
-  if (hoursEl) hoursEl.textContent = pad(h);
-  if (minutesEl) minutesEl.textContent = pad(m);
-  if (secondsEl) secondsEl.textContent = pad(s);
+  hoursEl.textContent = pad(h);
+  minutesEl.textContent = pad(m);
+  secondsEl.textContent = pad(s);
 }
 
 function init(): void {
-  const params = new URLSearchParams(window.location.search);
+  const { site, start, end, days } = parseParams();
 
-  const site = params.get('site') ?? '사이트';
-  const startParam = params.get('start') ?? '09:00';
-  const endParam = params.get('end') ?? '18:00';
-  const daysParam = params.get('days') ?? '1,2,3,4,5';
+  // Set site name
+  const siteNameEl = document.getElementById('site-name') as HTMLElement;
+  siteNameEl.textContent = site;
+  document.title = `${site} — 접근 차단됨`;
 
-  // Parse times
-  const [startHour, startMinute] = startParam.split(':').map(Number);
-  const [endHour, endMinute] = endParam.split(':').map(Number);
-  const days = parseDays(daysParam);
+  // Set schedule
+  const scheduleEl = document.getElementById('schedule-value') as HTMLElement;
+  scheduleEl.textContent = formatSchedule(days, start, end);
 
-  // Site name
-  const siteEl = document.getElementById('siteName');
-  if (siteEl) siteEl.textContent = site;
-
-  // Schedule text
-  const scheduleEl = document.getElementById('scheduleText');
-  if (scheduleEl) {
-    const dayStr = formatDays(days);
-    scheduleEl.textContent = `${dayStr} ${pad(startHour)}:${pad(startMinute)} - ${pad(endHour)}:${pad(endMinute)}`;
-  }
-
-  // Random motivation
-  const motivationEl = document.getElementById('motivationText');
-  if (motivationEl) {
-    const idx = Math.floor(Math.random() * MOTIVATIONS.length);
-    motivationEl.textContent = MOTIVATIONS[idx];
-  }
+  // Set random motivation
+  const motivationEl = document.getElementById('motivation') as HTMLElement;
+  const randomIndex = Math.floor(Math.random() * MOTIVATIONS.length);
+  motivationEl.textContent = MOTIVATIONS[randomIndex] as string;
 
   // Start countdown
-  updateCountdown(endHour, endMinute, days);
-  setInterval(() => updateCountdown(endHour, endMinute, days), 1000);
+  const endDate = getEndDateTime(end);
+  updateCountdown(endDate);
+  setInterval(() => updateCountdown(endDate), 1000);
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
-export {};
