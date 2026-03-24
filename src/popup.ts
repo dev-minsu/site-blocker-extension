@@ -1,3 +1,5 @@
+export {};
+
 interface BlockRule {
   id: string;
   urlPattern: string;
