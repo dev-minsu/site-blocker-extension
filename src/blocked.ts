@@ -63,26 +63,34 @@ function formatSchedule(days: number[], start: string, end: string): string {
 }
 
 // ── Countdown ─────────────────────────────────────────────────────────────────
-function getEndDateTime(endTime: string): Date {
+
+/**
+ * Returns seconds remaining until endTime today.
+ * Returns 0 if endTime has already passed — prevents the old bug where
+ * refreshing the blocked page after the block ended showed 23:59:00 because
+ * getEndDateTime() was pushing the target to tomorrow.
+ */
+function getSecondsUntilEnd(endTime: string): number {
   const now = new Date();
   const [hours, minutes] = endTime.split(':').map(Number);
-  const end = new Date(now);
-  end.setHours(hours as number, minutes as number, 0, 0);
+  const endMinutes = (hours as number) * 60 + (minutes as number);
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const diffMinutes = endMinutes - nowMinutes;
 
-  if (end <= now) {
-    end.setDate(end.getDate() + 1);
-  }
-
-  return end;
+  if (diffMinutes <= 0) return 0; // block already over
+  return diffMinutes * 60 - now.getSeconds();
 }
 
 function pad(n: number): string {
   return String(n).padStart(2, '0');
 }
 
-function updateCountdown(endDate: Date, originalSite: string): void {
-  const now = new Date();
-  const diff = Math.max(0, Math.floor((endDate.getTime() - now.getTime()) / 1000));
+function updateCountdown(
+  remainingSeconds: number,
+  originalUrl: string,
+  intervalId: ReturnType<typeof setInterval>
+): void {
+  const diff = Math.max(0, remainingSeconds);
 
   const h = Math.floor(diff / 3600);
   const m = Math.floor((diff % 3600) / 60);
@@ -92,10 +100,12 @@ function updateCountdown(endDate: Date, originalSite: string): void {
   (document.getElementById('minutes') as HTMLElement).textContent = pad(m);
   (document.getElementById('seconds') as HTMLElement).textContent = pad(s);
 
-  // Auto-redirect when block time ends
-  if (diff === 0 && originalSite) {
-    const returnUrl = originalSite.startsWith('http') ? originalSite : `https://${originalSite}`;
-    window.location.href = returnUrl;
+  if (diff === 0) {
+    clearInterval(intervalId);
+    if (originalUrl) {
+      const returnUrl = originalUrl.startsWith('http') ? originalUrl : `https://${originalUrl}`;
+      window.location.href = returnUrl;
+    }
   }
 }
 
@@ -151,10 +161,16 @@ function init(): void {
 
     applyI18n(params);
 
-    // Start countdown + auto-redirect when block ends
-    const endDate = getEndDateTime(params.end);
-    updateCountdown(endDate, params.originalUrl);
-    setInterval(() => updateCountdown(endDate, params.originalUrl), 1000);
+    // Start countdown + auto-redirect when block ends.
+    // Tick-based: compute remaining seconds once, then decrement each second.
+    // This avoids the "tomorrow" bug from Date-based getEndDateTime().
+    let remaining = getSecondsUntilEnd(params.end);
+    const intervalId = setInterval(() => {
+      remaining = Math.max(0, remaining - 1);
+      updateCountdown(remaining, params.originalUrl, intervalId);
+    }, 1000);
+    // Render immediately (before the first tick)
+    updateCountdown(remaining, params.originalUrl, intervalId);
   });
 }
 
