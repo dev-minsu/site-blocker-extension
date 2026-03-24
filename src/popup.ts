@@ -265,7 +265,12 @@ async function addRule(): Promise<void> {
   const startInput = document.getElementById('start-time') as HTMLInputElement;
   const endInput = document.getElementById('end-time') as HTMLInputElement;
 
-  const urlPattern = urlInput.value.trim().toLowerCase().replace(/^https?:\/\//, '');
+  const urlPattern = urlInput.value
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, '')
+    .replace(/^www\./, '')
+    .replace(/\/+$/, '');
   if (!urlPattern) {
     urlInput.focus();
     return;
@@ -336,13 +341,19 @@ async function init(): Promise<void> {
   // Add button
   document.getElementById('add-btn')?.addEventListener('click', addRule);
 
-  // Enter on URL input
-  (document.getElementById('url-input') as HTMLInputElement).addEventListener(
-    'keydown',
-    (e: KeyboardEvent) => {
-      if (e.key === 'Enter') addRule();
-    }
-  );
+  // Enter on URL input + blur normalization
+  const urlInput = document.getElementById('url-input') as HTMLInputElement;
+  urlInput.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Enter') addRule();
+  });
+  urlInput.addEventListener('blur', () => {
+    urlInput.value = urlInput.value
+      .trim()
+      .toLowerCase()
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\/+$/, '');
+  });
 
   // Lang toggle
   document.getElementById('lang-btn')?.addEventListener('click', switchLang);

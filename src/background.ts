@@ -43,12 +43,15 @@ function isBlockedNow(rule: BlockRule): boolean {
   return currentMinutes >= start && currentMinutes < end;
 }
 
+function normalizePattern(p: string): string {
+  return p.toLowerCase().replace(/^www\./, '').replace(/\/+$/, '').trim();
+}
+
 function matchesUrl(urlPattern: string, url: string): boolean {
   try {
     const { hostname } = new URL(url);
-    // Strip www. for comparison
-    const normalized = hostname.replace(/^www\./, '');
-    const pattern = urlPattern.toLowerCase().replace(/^www\./, '');
+    const normalized = normalizePattern(hostname);
+    const pattern = normalizePattern(urlPattern);
     return normalized === pattern || normalized.endsWith('.' + pattern);
   } catch {
     return false;

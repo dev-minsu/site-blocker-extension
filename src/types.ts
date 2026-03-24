@@ -7,7 +7,10 @@ export interface BlockRule {
   enabled: boolean;
 }
 
+export type Lang = 'ko' | 'en';
+
 export interface StorageData {
   rules: BlockRule[];
   globalEnabled: boolean;
+  lang: Lang;
 }
