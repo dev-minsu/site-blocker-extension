@@ -68,7 +68,7 @@ function findBlockingRule(url: string): BlockRule | null {
   return null;
 }
 
-function buildBlockedUrl(tabId: number, rule: BlockRule, originalUrl: string): string {
+function buildBlockedUrl(_tabId: number, rule: BlockRule, originalUrl: string): string {
   const extensionUrl = chrome.runtime.getURL('dist/blocked.html'); // Chrome ext root = project root, dist/ prefix needed
   let site = '';
   try {
@@ -81,6 +81,7 @@ function buildBlockedUrl(tabId: number, rule: BlockRule, originalUrl: string): s
     start: rule.startTime,
     end: rule.endTime,
     days: rule.days.join(','),
+    url: originalUrl, // original URL to return to after block ends
   });
   return `${extensionUrl}?${params.toString()}`;
 }
@@ -111,6 +112,29 @@ chrome.webNavigation.onCommitted.addListener((details) => {
     chrome.tabs.update(tabId, { url: blockedUrl });
   }
 });
+
+// ── Periodic check: block sites already open in tabs ─────────────────────────
+// Checks all open tabs every 30 seconds to catch users already on a site
+// when the block window starts.
+function checkAllTabs(): void {
+  chrome.tabs.query({}, (tabs) => {
+    for (const tab of tabs) {
+      const url = tab.url;
+      const tabId = tab.id;
+      if (!url || !tabId) continue;
+      if (url.startsWith('chrome://') || url.startsWith('chrome-extension://')) continue;
+
+      const rule = findBlockingRule(url);
+      if (rule) {
+        const blockedUrl = buildBlockedUrl(tabId, rule, url);
+        chrome.tabs.update(tabId, { url: blockedUrl });
+      }
+    }
+  });
+}
+
+// Run every 30 seconds
+setInterval(checkAllTabs, 30_000);
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 

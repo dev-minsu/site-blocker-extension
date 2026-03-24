@@ -12,6 +12,7 @@ interface BlockedParams {
   start: string;
   end: string;
   days: number[];
+  originalUrl: string; // full URL to return to after block ends
 }
 
 function parseParams(): BlockedParams {
@@ -26,8 +27,9 @@ function parseParams(): BlockedParams {
         .map((d) => parseInt(d, 10))
         .filter((d) => !isNaN(d))
     : [];
+  const originalUrl = params.get('url') ?? (site ? `https://${site}` : '');
 
-  return { site, start, end, days };
+  return { site, start, end, days, originalUrl };
 }
 
 // ── Schedule Formatter ────────────────────────────────────────────────────────
@@ -78,18 +80,23 @@ function pad(n: number): string {
   return String(n).padStart(2, '0');
 }
 
-function updateCountdown(endDate: Date): void {
+function updateCountdown(endDate: Date, originalSite: string): void {
   const now = new Date();
-  let diff = Math.max(0, Math.floor((endDate.getTime() - now.getTime()) / 1000));
+  const diff = Math.max(0, Math.floor((endDate.getTime() - now.getTime()) / 1000));
 
   const h = Math.floor(diff / 3600);
-  diff -= h * 3600;
-  const m = Math.floor(diff / 60);
-  const s = diff - m * 60;
+  const m = Math.floor((diff % 3600) / 60);
+  const s = diff % 60;
 
   (document.getElementById('hours') as HTMLElement).textContent = pad(h);
   (document.getElementById('minutes') as HTMLElement).textContent = pad(m);
   (document.getElementById('seconds') as HTMLElement).textContent = pad(s);
+
+  // Auto-redirect when block time ends
+  if (diff === 0 && originalSite) {
+    const returnUrl = originalSite.startsWith('http') ? originalSite : `https://${originalSite}`;
+    window.location.href = returnUrl;
+  }
 }
 
 // ── i18n Apply ────────────────────────────────────────────────────────────────
@@ -144,10 +151,10 @@ function init(): void {
 
     applyI18n(params);
 
-    // Start countdown
+    // Start countdown + auto-redirect when block ends
     const endDate = getEndDateTime(params.end);
-    updateCountdown(endDate);
-    setInterval(() => updateCountdown(endDate), 1000);
+    updateCountdown(endDate, params.originalUrl);
+    setInterval(() => updateCountdown(endDate, params.originalUrl), 1000);
   });
 }
 
